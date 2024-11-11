@@ -1,0 +1,12 @@
+path: D:\Graduation_Project\final project\yolov10-main\datasets\dataset1
+train: train.txt
+val: val.txt
+test: test.txt
+
+nc: 5
+names:
+  0: pedestrians
+  1: cars
+  2: buses
+  3: bicycles
+  4: motorbikes
