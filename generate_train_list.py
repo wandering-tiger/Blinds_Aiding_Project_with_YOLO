@@ -1,12 +1,12 @@
 import os
 
 # 定义数据集路径
-dataset_path = r'D:\Graduation_Project\final project\yolov10-main\datasets\dataset1\images'
+dataset_path = r'/mnt/shared/home/b30ubckb1/Project_YOLO/datasets/dataset1/images'
 
 # 定义保存路径
 output_paths = {
-    'train': r'D:\Graduation_Project\final project\yolov10-main\datasets\dataset1\train.txt',
-    'val': r'D:\Graduation_Project\final project\yolov10-main\datasets\dataset1\val.txt',
+    'train': r'/mnt/shared/home/b30ubckb1/Project_YOLO/datasets/dataset1/train.txt',
+    'val': r'/mnt/shared/home/b30ubckb1/Project_YOLO/datasets/dataset1/val.txt',
 }
 
 # 文件夹映射到相应的输出路径
