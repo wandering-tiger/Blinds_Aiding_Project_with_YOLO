@@ -1,4 +1,3 @@
-import os
 import cv2
 import supervision as sv
 import numpy as np
@@ -7,25 +6,11 @@ from ultralytics import YOLOv10
 from tqdm import tqdm
 from ViewTransformer import ViewTransformer
 
-SOURCE_VIDEO_PATH = r"datasets/video1.mp4"
-TARGET_VIDEO_PATH = r"video1-result.mp4"
+SOURCE_VIDEO_PATH = r"datasets/sample_video.mp4"
+TARGET_VIDEO_PATH = r"sample_video-result.mp4"
 CONFIDENCE_THRESHOLD = 0.3
 IOU_THRESHOLD = 0.5
 MODEL_RESOLUTION = 1280
-
-SOURCE = np.array([
-    [662, 753],
-    [1109, 737],
-    [1588, 934],
-    [362, 1010]
-])
-
-TARGET = np.array([
-    [0, 0],
-    [5.3, 0],
-    [5.3, 9.7],
-    [0, 9.7],
-])
 
 # SOURCE = np.array([
 #     [1252, 787],
@@ -41,21 +26,43 @@ TARGET = np.array([
 #     [0, 249],
 # ])
 
+cap = cv2.VideoCapture(SOURCE_VIDEO_PATH)
+# 获取视频帧宽度和高度
+width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+cap.release()
+
+sample_source_width=1702
+sample_source_height=1276
+
+ratio_width = width/sample_source_width
+ratio_height = height/sample_source_height
+
+SOURCE = np.array([
+    [662*ratio_width, 753*ratio_height],
+    [1109*ratio_width, 737*ratio_height],
+    [1588*ratio_width, 934*ratio_height],
+    [362*ratio_width, 1010*ratio_height]
+])
+
+TARGET = np.array([
+    [0, 0],
+    [5.3, 0],
+    [5.3, 9.7],
+    [0, 9.7],
+])
+
 RANGE = np.array([
-    [1252, 787],
-    [2298, 803],
-    [5039, 2159],
-    [-550, 2159]
+    [width/3, height/3],
+    [2*width/3, height/3],
+    [width, 3*height/4],
+    [0, 3*height/4]
 ])
 
 view_transformer = ViewTransformer(source=SOURCE, target=TARGET)
 
 # 加载预训练模型
 model = YOLOv10(r"runs/detect/train15/weights/best.pt")
-
-# # 获取预测目录下视频的路径
-# video_path = r"datasets/video1.mp4"
-# cap = cv2.VideoCapture(video_path)
 
 
 # output_folder = r"temp_videos"
@@ -96,6 +103,8 @@ polygon_zone = sv.PolygonZone(
 
 coordinates = defaultdict(lambda: deque(maxlen=video_info.fps))
 
+CLASS_NAMES = model.names
+
 # open target video
 with sv.VideoSink(TARGET_VIDEO_PATH, video_info) as sink:
 
@@ -134,9 +143,10 @@ with sv.VideoSink(TARGET_VIDEO_PATH, video_info) as sink:
         # format labels
         labels = []
 
-        for tracker_id in detections.tracker_id:
+        for tracker_id, class_id in zip(detections.tracker_id, detections.class_id):
+            class_name = CLASS_NAMES.get(class_id, "Unknown")
             if len(coordinates[tracker_id]) < video_info.fps / 2:
-                labels.append(f"#{tracker_id}")
+                labels.append(f"#{tracker_id} ({class_name})")
             else:
                 # calculate speed
                 coordinate_start = coordinates[tracker_id][-1]
@@ -144,7 +154,7 @@ with sv.VideoSink(TARGET_VIDEO_PATH, video_info) as sink:
                 distance = abs(coordinate_start - coordinate_end)
                 time = len(coordinates[tracker_id]) / video_info.fps
                 speed = distance / time
-                labels.append(f"#{tracker_id} {int(speed)} m/s")
+                labels.append(f"#{tracker_id} ({class_name}) {int(speed)} m/s")
 
         # annotate frame
         annotated_frame = frame.copy()
