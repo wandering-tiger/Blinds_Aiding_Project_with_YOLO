@@ -1,181 +1,102 @@
-# [YOLOv10: Real-Time End-to-End Object Detection](https://arxiv.org/abs/2405.14458)
+# A Blind Aiding System based on YOLO
+
+## Aims for the project
+Nowadays, the roads are busier than ever before, for the increasing of all kinds of vehicles like motors, cars, etc. Even for healthy people, going cross the roads can be hard in a degree. From a very young age, I was told that observing road conditions is necessary to be done before going across the road.  
+For blind people, it is very hard to confirm the safety when going cross the road. There will be plenty of cars on the road, the information about these cars should be informed to them in an efficient and reliable way.
+![the blind on road](/the_blind_on_road.png "the blind on road")
+
+## Custom YOLO Version
+This repository is a fork of [YOLOv10](https://github.com/THU-MIG/yolov10) and has been modified to suit specific needs. The project remains under the **AGPL-3.0 License**, ensuring that any modifications remain open-source.
 
 
-Official PyTorch implementation of **YOLOv10**. NeurIPS 2024.
+## Experimental environment
+### Dataset
+I upload the dataset to huggingface. The dataset contains 5 labels, which are pedestrian, car, bus, bicycle and motorbike.  
+Dataset: [Vehicle-Detection-in-haze-Dataset](https://huggingface.co/datasets/wandering-tiger/Vehicle-Detection-in-haze-Dataset)
 
-<p align="center">
-  <img src="figures/latency.svg" width=48%>
-  <img src="figures/params.svg" width=48%> <br>
-  Comparisons with others in terms of latency-accuracy (left) and size-accuracy (right) trade-offs.
-</p>
+### Hardware specifications
+I use a cluster provided by Heriot-Watt University in the cloud comprising 1 GPU and 24 CPUs.  
 
-[YOLOv10: Real-Time End-to-End Object Detection](https://arxiv.org/abs/2405.14458).\
-Ao Wang, Hui Chen, Lihao Liu, Kai Chen, Zijia Lin, Jungong Han, and Guiguang Ding\
-[![arXiv](https://img.shields.io/badge/arXiv-2405.14458-b31b1b.svg)](https://arxiv.org/abs/2405.14458) <a href="https://colab.research.google.com/github/roboflow-ai/notebooks/blob/main/notebooks/train-yolov10-object-detection-on-custom-dataset.ipynb#scrollTo=SaKTSzSWnG7s"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"></a> [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Models-blue)](https://huggingface.co/collections/jameslahm/yolov10-665b0d90b0b5bb85129460c2) [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/jameslahm/YOLOv10)  [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/kadirnar/Yolov10)  [![Transformers.js Demo](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Transformers.js-blue)](https://huggingface.co/spaces/Xenova/yolov10-web) [![LearnOpenCV](https://img.shields.io/badge/BlogPost-blue?logo=data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAMAAAC67D%2BPAAAALVBMVEX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F6%2Bfn6%2Bvq3y%2BJ8rOFSne9Jm%2FQcOlr5DJ7GAAAAB3RSTlMAB2LM94H1yMxlvwAAADNJREFUCFtjZGAEAob%2FQMDIyAJl%2FmFkYmEGM%2F%2F%2BYWRmYWYCMv8BmSxYmUgKkLQhGYawAgApySgfFDPqowAAAABJRU5ErkJggg%3D%3D&logoColor=black&labelColor=gray)](https://learnopencv.com/yolov10/) [![Openbayes Demo](https://img.shields.io/static/v1?label=Demo&message=OpenBayes%E8%B4%9D%E5%BC%8F%E8%AE%A1%E7%AE%97&color=green)](https://openbayes.com/console/public/tutorials/im29uYrnIoz) 
+- CPU: 24x Intel Xeon Platinum 8167M. Base frequency 2.0 GHz, max turbo frequency 2.4 GHz.
+- CPU Memory: 72GB
+- GPU: 1x NVIDIA Tesla P100
+- GPU Memory: 16GB
 
+## Main works on creating the system
+### Object Detection
+I choose to the use YOLOv10 for object detection, which is used for detecting vehicles.  
+The system is built based on YOLO. It should detect vehicles automatically, and alert when speed of vehicles over a threshold.  
+Firstly, I forked YOLOv10 and deploy on server, trained a model with my own dataset, which can detect objects successfully. Further work focus on the improvement of the detection and model.
 
-<details>
-  <summary>
-  <font size="+1">Abstract</font>
-  </summary>
-Over the past years, YOLOs have emerged as the predominant paradigm in the field of real-time object detection owing to their effective balance between computational cost and detection performance. Researchers have explored the architectural designs, optimization objectives, data augmentation strategies, and others for YOLOs, achieving notable progress. However, the reliance on the non-maximum suppression (NMS) for post-processing hampers the end-to-end deployment of YOLOs and adversely impacts the inference latency. Besides, the design of various components in YOLOs lacks the comprehensive and thorough inspection, resulting in noticeable computational redundancy and limiting the model's capability. It renders the suboptimal efficiency, along with considerable potential for performance improvements. In this work, we aim to further advance the performance-efficiency boundary of YOLOs from both the post-processing and the model architecture. To this end, we first present the consistent dual assignments for NMS-free training of YOLOs, which brings the competitive performance and low inference latency simultaneously. Moreover, we introduce the holistic efficiency-accuracy driven model design strategy for YOLOs. We comprehensively optimize various components of YOLOs from both the efficiency and accuracy perspectives, which greatly reduces the computational overhead and enhances the capability. The outcome of our effort is a new generation of YOLO series for real-time end-to-end object detection, dubbed YOLOv10. Extensive experiments show that YOLOv10 achieves the state-of-the-art performance and efficiency across various model scales. For example, our YOLOv10-S is 1.8$\times$ faster than RT-DETR-R18 under the similar AP on COCO, meanwhile enjoying 2.8$\times$ smaller number of parameters and FLOPs. Compared with YOLOv9-C, YOLOv10-B has 46\% less latency and 25\% fewer parameters for the same performance.
-</details>
+### Object Tracking
+After detecting objects, object tracking should be applied before speed estimation.  
+Here I choose to use `BYTETrack` in [Supervision](https://github.com/roboflow/supervision?ref=blog.roboflow.com) library for object tracking.
 
-## Notes
-- 2024/05/31: Please use the [exported format](https://github.com/THU-MIG/yolov10?tab=readme-ov-file#export) for benchmark. In the non-exported format, e.g., pytorch, the speed of YOLOv10 is biased because the unnecessary `cv2` and `cv3` operations in the `v10Detect` are executed during inference.
-- 2024/05/30: We provide [some clarifications and suggestions](https://github.com/THU-MIG/yolov10/issues/136) for detecting smaller objects or objects in the distance with YOLOv10. Thanks to [SkalskiP](https://github.com/SkalskiP)!
-- 2024/05/27: We have updated the [checkpoints](https://huggingface.co/collections/jameslahm/yolov10-665b0d90b0b5bb85129460c2) with class names, for ease of use.
+### Speed Estimation
+Speed estimation is essential in the project. Generally, there are two main ways for speed estimation.  
+1. **Common Video-Based Vehicle Speed Measurement Method**  
+One standard approach calculates the actual physical displacement of a vehicle between two frames based on parameters such as the camera's vertical height from the ground and focal length. The displacement is then divided by the time between frames to determine the vehicle's speed.
+However, this method requires precise knowledge of the camera’s attributes at each measurement location, which is often difficult to obtain in real-world scenarios.
+2. **Perspective Transformation-Based Vehicle Speed Measurement**  
+To overcome the challenges of parameter dependency, an alternative method uses perspective transformation to convert the video frames into a bird’s-eye view, where each pixel represents a fixed physical distance. This ensures that any object’s motion can be measured directly using pixel displacement and time difference.
 
-## UPDATES 🔥
-- 2024/06/01: Thanks to [ErlanggaYudiPradana](https://github.com/rlggyp) for the integration with [C++ | OpenVINO | OpenCV](https://github.com/rlggyp/YOLOv10-OpenVINO-CPP-Inference)
-- 2024/06/01: Thanks to [NielsRogge](https://github.com/NielsRogge) and [AK](https://x.com/_akhaliq) for hosting the models on the HuggingFace Hub!
-- 2024/05/31: Build [yolov10-jetson](https://github.com/Seeed-Projects/jetson-examples/blob/main/reComputer/scripts/yolov10/README.md) docker image by [youjiang](https://github.com/yuyoujiang)!
-- 2024/05/31: Thanks to [mohamedsamirx](https://github.com/mohamedsamirx) for the integration with [BoTSORT, DeepOCSORT, OCSORT, HybridSORT, ByteTrack, StrongSORT using BoxMOT library](https://colab.research.google.com/drive/1-QV2TNfqaMsh14w5VxieEyanugVBG14V?usp=sharing)!
-- 2024/05/31: Thanks to [kaylorchen](https://github.com/kaylorchen) for the integration with [rk3588](https://github.com/kaylorchen/rk3588-yolo-demo)!
-- 2024/05/30: Thanks to [eaidova](https://github.com/eaidova) for the integration with [OpenVINO™](https://github.com/openvinotoolkit/openvino_notebooks/blob/0ba3c0211bcd49aa860369feddffdf7273a73c64/notebooks/yolov10-optimization/yolov10-optimization.ipynb)!
-- 2024/05/29: Add the gradio demo for running the models locally. Thanks to [AK](https://x.com/_akhaliq)!
-- 2024/05/27: Thanks to [sujanshresstha](sujanshresstha) for the integration with [DeepSORT](https://github.com/sujanshresstha/YOLOv10_DeepSORT.git)!
-- 2024/05/26: Thanks to [CVHub520](https://github.com/CVHub520) for the integration into [X-AnyLabeling](https://github.com/CVHub520/X-AnyLabeling)!
-- 2024/05/26: Thanks to [DanielSarmiento04](https://github.com/DanielSarmiento04) for integrate in [c++ | ONNX | OPENCV](https://github.com/DanielSarmiento04/yolov10cpp)!
-- 2024/05/25: Add [Transformers.js demo](https://huggingface.co/spaces/Xenova/yolov10-web) and onnx weights(yolov10[n](https://huggingface.co/onnx-community/yolov10n)/[s](https://huggingface.co/onnx-community/yolov10s)/[m](https://huggingface.co/onnx-community/yolov10m)/[b](https://huggingface.co/onnx-community/yolov10b)/[l](https://huggingface.co/onnx-community/yolov10l)/[x](https://huggingface.co/onnx-community/yolov10x)). Thanks to [xenova](https://github.com/xenova)!
-- 2024/05/25: Add [colab demo](https://colab.research.google.com/github/roboflow-ai/notebooks/blob/main/notebooks/train-yolov10-object-detection-on-custom-dataset.ipynb#scrollTo=SaKTSzSWnG7s), [HuggingFace Demo](https://huggingface.co/spaces/kadirnar/Yolov10), and [HuggingFace Model Page](https://huggingface.co/kadirnar/Yolov10). Thanks to [SkalskiP](https://github.com/SkalskiP) and [kadirnar](https://github.com/kadirnar)! 
+Obviously, in our scenario, Method 1 is not suitable, because we are not able to obtain specified location information about cameras and cars.
+**Perspective Transformation** is needed for estimation. We can simulate actual situations by taking photos, manually calculate the transformation matrix, and apply it to the program.  
+For Perspective Transformation, a [blog](https://blog.roboflow.com/estimate-speed-computer-vision/) provides an excellent method, and can adapt to our own scenarios. I refer to the methods in the blog, which get satisfying performance.  
 
-## Performance
-COCO
+#### Perspective Transformation
+![picture of Perspective Transformation](/Perspective_Transformation_sample.jpg "Perspective Transformation Sample")
+We need a way to transform the coordinates in the image, which is represented by pixels, into actual coordinates on the road, removing the perspective-related distortion along the way. Fortunately, we can do this with OpenCV and some mathematics.  
+To transform the perspective, we need a Transformation Matrix, which we determine using the `getPerspectiveTransform` function in OpenCV. This function takes two arguments - source and target regions of interest. In the visualization below, these regions are labeled `A-B-C-D` and `A'-B'-C'-D'`, respectively.  
+In this example, I reorganize the coordinates of vertices `A-B-C-D` and `A'-B'-C'-D'` into 2D `SOURCE` and `TARGET` matrices, respectively, where each row of the matrix contains the coordinates of one point.  
+``` python
+SOURCE = np.array([
+    [662*ratio_width, 753*ratio_height],
+    [1109*ratio_width, 737*ratio_height],
+    [1588*ratio_width, 934*ratio_height],
+    [362*ratio_width, 1010*ratio_height]
+])
 
-| Model | Test Size | #Params | FLOPs | AP<sup>val</sup> | Latency |
-|:---------------|:----:|:---:|:--:|:--:|:--:|
-| [YOLOv10-N](https://huggingface.co/jameslahm/yolov10n) |   640  |     2.3M    |   6.7G   |     38.5%     | 1.84ms |
-| [YOLOv10-S](https://huggingface.co/jameslahm/yolov10s) |   640  |     7.2M    |   21.6G  |     46.3%     | 2.49ms |
-| [YOLOv10-M](https://huggingface.co/jameslahm/yolov10m) |   640  |     15.4M   |   59.1G  |     51.1%     | 4.74ms |
-| [YOLOv10-B](https://huggingface.co/jameslahm/yolov10b) |   640  |     19.1M   |  92.0G |     52.5%     | 5.74ms |
-| [YOLOv10-L](https://huggingface.co/jameslahm/yolov10l) |   640  |     24.4M   |  120.3G   |     53.2%     | 7.28ms |
-| [YOLOv10-X](https://huggingface.co/jameslahm/yolov10x) |   640  |     29.5M    |   160.4G   |     54.4%     | 10.70ms |
-
-## Installation
-`conda` virtual environment is recommended. 
+TARGET = np.array([
+    [0, 0],
+    [5.3, 0],
+    [5.3, 9.7],
+    [0, 9.7],
+])
 ```
-conda create -n yolov10 python=3.9
-conda activate yolov10
-pip install -r requirements.txt
-pip install -e .
-```
-## Demo
-```
-python app.py
-# Please visit http://127.0.0.1:7860
-```
+The `ratio_width` and `ratio_height` coefficient multiplied above, are used for resize real picture to the size of `SOURCE`, which is necessary for adapt the Perspective Transformation to different size.
 
-## Validation
-[`yolov10n`](https://huggingface.co/jameslahm/yolov10n)  [`yolov10s`](https://huggingface.co/jameslahm/yolov10s)  [`yolov10m`](https://huggingface.co/jameslahm/yolov10m)  [`yolov10b`](https://huggingface.co/jameslahm/yolov10b)  [`yolov10l`](https://huggingface.co/jameslahm/yolov10l)  [`yolov10x`](https://huggingface.co/jameslahm/yolov10x)  
-```
-yolo val model=jameslahm/yolov10{n/s/m/b/l/x} data=coco.yaml batch=256
-```
-
-Or
-```python
-from ultralytics import YOLOv10
-
-model = YOLOv10.from_pretrained('jameslahm/yolov10{n/s/m/b/l/x}')
-# or
-# wget https://github.com/THU-MIG/yolov10/releases/download/v1.1/yolov10{n/s/m/b/l/x}.pt
-model = YOLOv10('yolov10{n/s/m/b/l/x}.pt')
-
-model.val(data='coco.yaml', batch=256)
-```
-
-
-## Training 
-```
-yolo detect train data=coco.yaml model=yolov10n/s/m/b/l/x.yaml epochs=500 batch=256 imgsz=640 device=0,1,2,3,4,5,6,7
+#### Speed Calculation
+We could calculate our speed every frame: calculate the distance traveled between two video frames and divide it by the inverse of our FPS, in my case, 1/25. Unfortunately, this method can result in very unstable and unrealistic speed values.  
+To prevent this, we average the values obtained throughout one second. This way, the distance covered by the car is significantly larger than the small box movement caused by flickering, and our speed measurements are closer to the truth.  
+``` python
+for tracker_id, class_id in zip(detections.tracker_id, detections.class_id):
+    class_name = CLASS_NAMES.get(class_id, "Unknown")
+    if len(coordinates[tracker_id]) < video_info.fps / 2:
+        labels.append(f"#{tracker_id} ({class_name})")
+    else:
+        # calculate speed
+        coordinate_start = coordinates[tracker_id][-1]
+        coordinate_end = coordinates[tracker_id][0]
+        distance = abs(coordinate_start - coordinate_end)
+        time = len(coordinates[tracker_id]) / video_info.fps
+        speed = distance / time
+        if speed > speed_threshold:
+            labels.append(f"#{tracker_id} ({class_name}) {int(speed)} m/s ALERT!")
+            alert_detections.append(tracker_id)
+        else:
+            labels.append(f"#{tracker_id} ({class_name}) {int(speed)} m/s")
 ```
 
-Or
-```python
-from ultralytics import YOLOv10
+### Special conditions handling
+After estimating speed successfully, we can focus on improving the model, which can increase the accuracy of detection.  
+As a blind aiding system, some special conditions should be taken into consider. YOLO has a basic structure, which perform well in most situations, but we can change the layers of net in both `backbone` and `head`, to get better performance in conditions like haze.  
+My dataset contains the haze environment, which will influence the performance of YOLO, so a dehaze net is needed. AOD-Net is well known dehaze net, which can be combined with YOLO. It is designed based on a re-formulated atmospheric scattering model, partly preserve the physical model, and can improve the performance of model.  
 
-model = YOLOv10()
-# If you want to finetune the model with pretrained weights, you could load the 
-# pretrained weights like below
-# model = YOLOv10.from_pretrained('jameslahm/yolov10{n/s/m/b/l/x}')
-# or
-# wget https://github.com/THU-MIG/yolov10/releases/download/v1.1/yolov10{n/s/m/b/l/x}.pt
-# model = YOLOv10('yolov10{n/s/m/b/l/x}.pt')
+#### AOD-Net
 
-model.train(data='coco.yaml', epochs=500, batch=256, imgsz=640)
-```
 
-## Push to hub to 🤗
+#### CBAM (Convolutional Block Attention Module)
 
-Optionally, you can push your fine-tuned model to the [Hugging Face hub](https://huggingface.co/) as a public or private model:
+## Results
 
-```python
-# let's say you have fine-tuned a model for crop detection
-model.push_to_hub("<your-hf-username-or-organization/yolov10-finetuned-crop-detection")
-
-# you can also pass `private=True` if you don't want everyone to see your model
-model.push_to_hub("<your-hf-username-or-organization/yolov10-finetuned-crop-detection", private=True)
-```
-
-## Prediction
-Note that a smaller confidence threshold can be set to detect smaller objects or objects in the distance. Please refer to [here](https://github.com/THU-MIG/yolov10/issues/136) for details.
-```
-yolo predict model=jameslahm/yolov10{n/s/m/b/l/x}
-```
-
-Or
-```python
-from ultralytics import YOLOv10
-
-model = YOLOv10.from_pretrained('jameslahm/yolov10{n/s/m/b/l/x}')
-# or
-# wget https://github.com/THU-MIG/yolov10/releases/download/v1.1/yolov10{n/s/m/b/l/x}.pt
-model = YOLOv10('yolov10{n/s/m/b/l/x}.pt')
-
-model.predict()
-```
-
-## Export
-```
-# End-to-End ONNX
-yolo export model=jameslahm/yolov10{n/s/m/b/l/x} format=onnx opset=13 simplify
-# Predict with ONNX
-yolo predict model=yolov10n/s/m/b/l/x.onnx
-
-# End-to-End TensorRT
-yolo export model=jameslahm/yolov10{n/s/m/b/l/x} format=engine half=True simplify opset=13 workspace=16
-# or
-trtexec --onnx=yolov10n/s/m/b/l/x.onnx --saveEngine=yolov10n/s/m/b/l/x.engine --fp16
-# Predict with TensorRT
-yolo predict model=yolov10n/s/m/b/l/x.engine
-```
-
-Or
-```python
-from ultralytics import YOLOv10
-
-model = YOLOv10.from_pretrained('jameslahm/yolov10{n/s/m/b/l/x}')
-# or
-# wget https://github.com/THU-MIG/yolov10/releases/download/v1.1/yolov10{n/s/m/b/l/x}.pt
-model = YOLOv10('yolov10{n/s/m/b/l/x}.pt')
-
-model.export(...)
-```
-
-## Acknowledgement
-
-The code base is built with [ultralytics](https://github.com/ultralytics/ultralytics) and [RT-DETR](https://github.com/lyuwenyu/RT-DETR).
-
-Thanks for the great implementations! 
-
-## Citation
-
-If our code or models help your work, please cite our paper:
-```BibTeX
-@article{wang2024yolov10,
-  title={YOLOv10: Real-Time End-to-End Object Detection},
-  author={Wang, Ao and Chen, Hui and Liu, Lihao and Chen, Kai and Lin, Zijia and Han, Jungong and Ding, Guiguang},
-  journal={arXiv preprint arXiv:2405.14458},
-  year={2024}
-}
-```
