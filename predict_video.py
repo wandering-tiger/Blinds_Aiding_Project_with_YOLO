@@ -12,6 +12,8 @@ CONFIDENCE_THRESHOLD = 0.3
 IOU_THRESHOLD = 0.5
 MODEL_RESOLUTION = 1280
 
+speed_threshold = 2
+
 # SOURCE = np.array([
 #     [1252, 787],
 #     [2298, 803],
@@ -143,6 +145,9 @@ with sv.VideoSink(TARGET_VIDEO_PATH, video_info) as sink:
         # format labels
         labels = []
 
+        # alert when speed is higher than threshold
+        alert_detections = []
+
         for tracker_id, class_id in zip(detections.tracker_id, detections.class_id):
             class_name = CLASS_NAMES.get(class_id, "Unknown")
             if len(coordinates[tracker_id]) < video_info.fps / 2:
@@ -154,7 +159,11 @@ with sv.VideoSink(TARGET_VIDEO_PATH, video_info) as sink:
                 distance = abs(coordinate_start - coordinate_end)
                 time = len(coordinates[tracker_id]) / video_info.fps
                 speed = distance / time
-                labels.append(f"#{tracker_id} ({class_name}) {int(speed)} m/s")
+                if speed > speed_threshold:
+                    labels.append(f"#{tracker_id} ({class_name}) {int(speed)} m/s ALERT!")
+                    alert_detections.append(tracker_id)
+                else:
+                    labels.append(f"#{tracker_id} ({class_name}) {int(speed)} m/s")
 
         # annotate frame
         annotated_frame = frame.copy()
@@ -167,6 +176,18 @@ with sv.VideoSink(TARGET_VIDEO_PATH, video_info) as sink:
         annotated_frame = label_annotator.annotate(
             scene=annotated_frame, detections=detections, labels=labels
         )
+
+        # draw alert frame
+        if alert_detections:
+            cv2.putText(
+                annotated_frame,
+                "ALERT! OVER SPEED DETECTED",
+                (width // 4, height // 2),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                1.5,
+                (0, 0, 255),  # red
+                4
+            )
 
         # add frame to target video
         sink.write_frame(annotated_frame)
