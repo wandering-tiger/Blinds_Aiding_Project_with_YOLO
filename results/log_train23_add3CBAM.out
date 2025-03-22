@@ -1,0 +1,391 @@
+Fri Mar 21 23:35:04 2025       
++---------------------------------------------------------------------------------------+
+| NVIDIA-SMI 535.86.10              Driver Version: 535.86.10    CUDA Version: 12.2     |
+|-----------------------------------------+----------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |         Memory-Usage | GPU-Util  Compute M. |
+|                                         |                      |               MIG M. |
+|=========================================+======================+======================|
+|   0  Tesla P100-SXM2-16GB           Off | 00000000:00:04.0 Off |                    0 |
+| N/A   41C    P0              32W / 300W |      0MiB / 16384MiB |      0%      Default |
+|                                         |                      |                  N/A |
++-----------------------------------------+----------------------+----------------------+
+                                                                                         
++---------------------------------------------------------------------------------------+
+| Processes:                                                                            |
+|  GPU   GI   CI        PID   Type   Process name                            GPU Memory |
+|        ID   ID                                                             Usage      |
+|=======================================================================================|
+|  No running processes found                                                           |
++---------------------------------------------------------------------------------------+
+# conda environments:
+#
+base                     /mnt/shared/home/b30ubckb1/miniconda3
+nerf                     /mnt/shared/home/b30ubckb1/miniconda3/envs/nerf
+yolov10               *  /mnt/shared/home/b30ubckb1/miniconda3/envs/yolov10
+
+New https://pypi.org/project/ultralytics/8.3.94 available 😃 Update with 'pip install -U ultralytics'
+Ultralytics YOLOv8.1.34 🚀 Python-3.9.20 torch-2.0.1+cu117 CUDA:0 (Tesla P100-SXM2-16GB, 16276MiB)
+[34m[1mengine/trainer: [0mtask=detect, mode=train, model=yolov10n-dehaze-CBAM.yaml, data=data.yaml, epochs=100, time=None, patience=100, batch=32, imgsz=640, save=True, save_period=-1, val_period=1, cache=False, device=None, workers=8, project=None, name=train23, exist_ok=False, pretrained=True, optimizer=auto, verbose=True, seed=0, deterministic=True, single_cls=False, rect=False, cos_lr=False, close_mosaic=10, resume=False, amp=True, fraction=1.0, profile=False, freeze=None, multi_scale=False, overlap_mask=True, mask_ratio=4, dropout=0.0, val=True, split=val, save_json=False, save_hybrid=False, conf=None, iou=0.7, max_det=300, half=False, dnn=False, plots=True, source=None, vid_stride=1, stream_buffer=False, visualize=False, augment=False, agnostic_nms=False, classes=None, retina_masks=False, embed=None, show=False, save_frames=False, save_txt=False, save_conf=False, save_crop=False, show_labels=True, show_conf=True, show_boxes=True, line_width=None, format=torchscript, keras=False, optimize=False, int8=False, dynamic=False, simplify=False, opset=None, workspace=4, nms=False, lr0=0.01, lrf=0.01, momentum=0.937, weight_decay=0.0005, warmup_epochs=3.0, warmup_momentum=0.8, warmup_bias_lr=0.1, box=7.5, cls=0.5, dfl=1.5, pose=12.0, kobj=1.0, label_smoothing=0.0, nbs=64, hsv_h=0.015, hsv_s=0.7, hsv_v=0.4, degrees=0.0, translate=0.1, scale=0.5, shear=0.0, perspective=0.0, flipud=0.0, fliplr=0.5, bgr=0.0, mosaic=1.0, mixup=0.0, copy_paste=0.0, auto_augment=randaugment, erasing=0.4, crop_fraction=1.0, cfg=None, tracker=botsort.yaml, save_dir=runs/detect/train23
+
+                   from  n    params  module                                       arguments                     
+  0                  -1  1      1793  ultralytics.nn.modules.block.AODNet          [3, 8]                        
+  1                  -1  1      1184  ultralytics.nn.modules.conv.Conv             [8, 16, 3, 2]                 
+  2                  -1  1      4672  ultralytics.nn.modules.conv.Conv             [16, 32, 3, 2]                
+  3                  -1  1      7360  ultralytics.nn.modules.block.C2f             [32, 32, 1, True]             
+  4                  -1  1     18560  ultralytics.nn.modules.conv.Conv             [32, 64, 3, 2]                
+  5                  -1  2     49664  ultralytics.nn.modules.block.C2f             [64, 64, 2, True]             
+  6                  -1  1      9856  ultralytics.nn.modules.block.SCDown          [64, 128, 3, 2]               
+  7                  -1  2    197632  ultralytics.nn.modules.block.C2f             [128, 128, 2, True]           
+  8                  -1  1     36096  ultralytics.nn.modules.block.SCDown          [128, 256, 3, 2]              
+  9                  -1  1    460288  ultralytics.nn.modules.block.C2f             [256, 256, 1, True]           
+ 10                  -1  1    164608  ultralytics.nn.modules.block.SPPF            [256, 256, 5]                 
+ 11                  -1  1    249728  ultralytics.nn.modules.block.PSA             [256, 256]                    
+ 12                  -1  1         0  torch.nn.modules.upsampling.Upsample         [None, 2, 'nearest']          
+ 13             [-1, 6]  1         0  ultralytics.nn.modules.conv.Concat           [1]                           
+ 14                  -1  1    147858  ultralytics.nn.modules.conv.CBAM             [384, 3]                      
+ 15                  -1  1    148224  ultralytics.nn.modules.block.C2f             [384, 128, 1]                 
+ 16                  -1  1         0  torch.nn.modules.upsampling.Upsample         [None, 2, 'nearest']          
+ 17             [-1, 4]  1         0  ultralytics.nn.modules.conv.Concat           [1]                           
+ 18                  -1  1     37074  ultralytics.nn.modules.conv.CBAM             [192, 3]                      
+ 19                  -1  1     37248  ultralytics.nn.modules.block.C2f             [192, 64, 1]                  
+ 20                  -1  1     36992  ultralytics.nn.modules.conv.Conv             [64, 64, 3, 2]                
+ 21            [-1, 13]  1         0  ultralytics.nn.modules.conv.Concat           [1]                           
+ 22                  -1  1    156416  ultralytics.nn.modules.block.C2f             [448, 128, 1]                 
+ 23                  -1  1     18048  ultralytics.nn.modules.block.SCDown          [128, 128, 3, 2]              
+ 24            [-1, 10]  1         0  ultralytics.nn.modules.conv.Concat           [1]                           
+ 25                  -1  1    147858  ultralytics.nn.modules.conv.CBAM             [384, 3]                      
+ 26                  -1  1    282624  ultralytics.nn.modules.block.C2fCIB          [384, 256, 1, True, True]     
+ 27        [16, 19, 22]  1    818990  ultralytics.nn.modules.head.v10Detect        [5, [128, 64, 128]]           
+YOLOv10n-dehaze-CBAM summary: 417 layers, 3032773 parameters, 3032757 gradients, 14.3 GFLOPs
+
+Freezing layer 'model.27.dfl.conv.weight'
+[34m[1mAMP: [0mrunning Automatic Mixed Precision (AMP) checks with YOLOv8n...
+[34m[1mAMP: [0mchecks passed ✅
+[34m[1mtrain: [0mWARNING ⚠️ /mnt/shared/home/b30ubckb1/Project_YOLO/datasets/dataset1/images/train/AM_Bing_211.png: ignoring corrupt image/label: Truncated File Read
+[34m[1mtrain: [0mWARNING ⚠️ /mnt/shared/home/b30ubckb1/Project_YOLO/datasets/dataset1/images/train/hv2_10.png: ignoring corrupt image/label: non-normalized or out of bounds coordinates [      1.102]
+[34m[1mtrain: [0mWARNING ⚠️ /mnt/shared/home/b30ubckb1/Project_YOLO/datasets/dataset1/images/train/hv2_16.png: ignoring corrupt image/label: non-normalized or out of bounds coordinates [     1.0967]
+Plotting labels to runs/detect/train23/labels.jpg... 
+[34m[1moptimizer:[0m 'optimizer=auto' found, ignoring 'lr0=0.01' and 'momentum=0.937' and determining best 'optimizer', 'lr0' and 'momentum' automatically... 
+[34m[1moptimizer:[0m AdamW(lr=0.001111, momentum=0.9) with parameter groups 95 weight(decay=0.0), 120 weight(decay=0.0005), 116 bias(decay=0.0)
+Image sizes 640 train, 640 val
+Using 8 dataloader workers
+Logging results to [1mruns/detect/train23[0m
+Starting training for 100 epochs...
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773    0.00284     0.0257    0.00149    0.00069
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.645    0.00835    0.00864    0.00433
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.748     0.0392     0.0296     0.0141
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.727     0.0289     0.0272     0.0125
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.641     0.0374     0.0325     0.0167
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.203      0.115     0.0996     0.0487
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.612     0.0245     0.0286     0.0158
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.323      0.212      0.196     0.0941
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773       0.41      0.123      0.145     0.0756
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773       0.28      0.222      0.193     0.0897
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.285      0.242      0.228      0.113
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.287      0.167      0.156     0.0801
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.667     0.0644     0.0791     0.0479
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.305      0.214      0.183     0.0877
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.398      0.268       0.26      0.127
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.532      0.221      0.228      0.108
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.408      0.312      0.276      0.139
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.351      0.257      0.253      0.121
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.476      0.186      0.181     0.0935
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.405      0.279      0.264      0.139
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.331      0.181      0.197      0.105
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773       0.32      0.285      0.277      0.142
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.437      0.287      0.302      0.149
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.482      0.278      0.298      0.152
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.328      0.176      0.176       0.09
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.442      0.319      0.335      0.176
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.475      0.337      0.359      0.183
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.503      0.274      0.296      0.147
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.394      0.317      0.294      0.152
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.438      0.376      0.336      0.171
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.395      0.303       0.31      0.158
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773       0.42      0.351      0.324      0.159
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.463      0.358      0.356      0.179
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.487      0.346      0.334      0.177
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.478      0.362      0.365      0.188
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773       0.35      0.372       0.36      0.179
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.666       0.29      0.324      0.165
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.331      0.339      0.348      0.182
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.463      0.415      0.393        0.2
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773       0.43      0.343      0.341       0.18
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.441      0.377      0.355      0.186
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.638       0.33      0.362      0.182
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.484      0.371      0.372      0.191
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.416      0.391       0.36       0.19
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.409      0.342      0.348      0.176
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.431      0.368      0.377      0.191
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.408      0.379      0.379      0.198
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.485      0.385      0.387      0.193
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.488      0.341       0.39      0.202
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.509      0.318      0.364      0.186
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.534       0.32      0.399        0.2
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.447      0.365      0.384      0.199
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.515      0.361      0.388      0.201
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.366      0.401      0.389      0.204
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.417      0.338       0.33       0.17
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.463      0.325      0.362      0.191
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.485      0.343      0.399      0.212
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.515      0.318      0.383      0.204
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.704      0.334      0.401      0.214
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.388      0.412      0.391        0.2
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.406      0.418      0.404      0.212
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.659      0.346       0.39      0.203
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.428      0.364      0.389      0.205
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.629      0.377      0.396      0.205
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.407      0.446      0.417      0.215
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.442      0.394      0.382      0.196
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.489      0.432      0.416      0.215
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773       0.45      0.454      0.422      0.213
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.432      0.436      0.423      0.214
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.419      0.458      0.404      0.213
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.442      0.443       0.42      0.221
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773       0.46      0.439      0.443      0.226
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.407      0.451      0.434      0.224
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.433      0.445       0.42       0.22
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.434      0.454      0.431      0.217
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.458      0.395      0.406      0.211
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.467      0.377      0.414      0.211
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773       0.73      0.328      0.407       0.21
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.499      0.395      0.446      0.222
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.462      0.427      0.437      0.226
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.429      0.463      0.437      0.224
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.441       0.44      0.434      0.221
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.488      0.418      0.434      0.219
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.432      0.464      0.433      0.218
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.477      0.423      0.433       0.22
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.558        0.4      0.438      0.222
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.482      0.389      0.433      0.222
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.527      0.391      0.433      0.221
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.515      0.414      0.438      0.223
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.515      0.402      0.443      0.226
+Closing dataloader mosaic
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.438      0.449      0.461      0.238
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.503      0.391      0.449      0.239
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.437      0.425      0.436      0.229
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.412      0.455      0.422      0.226
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.389      0.454      0.423      0.224
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773       0.48      0.436      0.444      0.234
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773       0.43      0.445      0.425      0.225
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.398      0.451      0.428      0.226
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.396       0.46      0.435      0.229
+
+      Epoch    GPU_mem     box_om     cls_om     dfl_om     box_oo     cls_oo     dfl_oo  Instances       Size
+                   all        100        773      0.418      0.441      0.434      0.231
+
+100 epochs completed in 3.291 hours.
+Optimizer stripped from runs/detect/train23/weights/last.pt, 6.5MB
+Optimizer stripped from runs/detect/train23/weights/best.pt, 6.5MB
+
+Validating runs/detect/train23/weights/best.pt...
+Ultralytics YOLOv8.1.34 🚀 Python-3.9.20 torch-2.0.1+cu117 CUDA:0 (Tesla P100-SXM2-16GB, 16276MiB)
+YOLOv10n-dehaze-CBAM summary (fused): 317 layers, 3019253 parameters, 0 gradients, 14.0 GFLOPs
+                   all        100        773      0.448      0.443      0.461      0.238
+            pedestrian        100        173      0.485      0.451      0.416      0.178
+                   car        100        479      0.544      0.693      0.694       0.42
+                   bus        100         49      0.519      0.571      0.572      0.343
+               bicycle        100         12      0.202     0.0833      0.203     0.0679
+             motorbike        100         60      0.488      0.417      0.422       0.18
+Speed: 1.4ms preprocess, 6.7ms inference, 0.0ms loss, 0.0ms postprocess per image
+Results saved to [1mruns/detect/train23[0m

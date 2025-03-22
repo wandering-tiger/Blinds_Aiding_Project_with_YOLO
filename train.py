@@ -2,7 +2,7 @@ from ultralytics import YOLOv10
 import os
 
 # load model
-model = YOLOv10("yolov10n-dehaze-add-head1.yaml")  # model structure
+model = YOLOv10("yolov10n-dehaze-CBAM1.yaml")  # model structure
 # # load pre-trained weights
 # model.load("weights/yolov10n.pt")
 

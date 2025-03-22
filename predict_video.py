@@ -6,8 +6,8 @@ from ultralytics import YOLOv10
 from tqdm import tqdm
 from ViewTransformer import ViewTransformer
 
-SOURCE_VIDEO_PATH = r"datasets/sample_video.mp4"
-TARGET_VIDEO_PATH = r"sample_video-result.mp4"
+SOURCE_VIDEO_PATH = r"datasets/video1.mp4"
+TARGET_VIDEO_PATH = r"video1-compare.mp4"
 CONFIDENCE_THRESHOLD = 0.3
 IOU_THRESHOLD = 0.5
 MODEL_RESOLUTION = 1280

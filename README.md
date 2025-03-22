@@ -3,7 +3,7 @@
 ## Aims for the project
 Nowadays, the roads are busier than ever before, for the increasing of all kinds of vehicles like motors, cars, etc. Even for healthy people, going cross the roads can be hard in a degree. From a very young age, I was told that observing road conditions is necessary to be done before going across the road.  
 For blind people, it is very hard to confirm the safety when going cross the road. There will be plenty of cars on the road, the information about these cars should be informed to them in an efficient and reliable way.
-![the blind on road](/the_blind_on_road.png "the blind on road")
+![the blind on road](/figures/the_blind_on_road.png "the blind on road")
 
 ## Custom YOLO Version
 This repository is a fork of [YOLOv10](https://github.com/THU-MIG/yolov10) and has been modified to suit specific needs. The project remains under the **AGPL-3.0 License**, ensuring that any modifications remain open-source.
@@ -45,7 +45,7 @@ Obviously, in our scenario, Method 1 is not suitable, because we are not able to
 For Perspective Transformation, a [blog](https://blog.roboflow.com/estimate-speed-computer-vision/) provides an excellent method, and can adapt to our own scenarios. I refer to the methods in the blog, which get satisfying performance.  
 
 #### Perspective Transformation
-![picture of Perspective Transformation](/Perspective_Transformation_sample.jpg "Perspective Transformation Sample")
+![picture of Perspective Transformation](/figures/Perspective_Transformation_sample.jpg "Perspective Transformation Sample")
 We need a way to transform the coordinates in the image, which is represented by pixels, into actual coordinates on the road, removing the perspective-related distortion along the way. Fortunately, we can do this with OpenCV and some mathematics.  
 To transform the perspective, we need a Transformation Matrix, which we determine using the `getPerspectiveTransform` function in OpenCV. This function takes two arguments - source and target regions of interest. In the visualization below, these regions are labeled `A-B-C-D` and `A'-B'-C'-D'`, respectively.  
 In this example, I reorganize the coordinates of vertices `A-B-C-D` and `A'-B'-C'-D'` into 2D `SOURCE` and `TARGET` matrices, respectively, where each row of the matrix contains the coordinates of one point.  
@@ -94,7 +94,7 @@ As a blind aiding system, some special conditions should be taken into consider.
 My dataset contains the haze environment, which will influence the performance of YOLO, so a dehaze net is needed. AOD-Net is well known dehaze net, which can be combined with YOLO. It is designed based on a re-formulated atmospheric scattering model, partly preserve the physical model, and can improve the performance of model.  
 
 #### AOD-Net
-To deal with haze in images, All-in-One Dehazing Network (AOD-Net) [3] can be used as a solution. AOD-Net represents a paradigm shift in dehazing by formulating the problem as an end-to-end trainable task. Unlike previous methods, AOD-Net does not estimate intermediate parameters like the transmission matrix or atmospheric light separately. Instead, it directly predicts the clean image from the hazy image using a lightweight CNN. This approach simplifies the dehazing process and makes it easier to integrate AOD-Net into larger pipelines,such as YOLO.  
+To deal with haze in images, All-in-One Dehaze Network (AOD-Net) [3] can be used as a solution. AOD-Net represents a paradigm shift in dehazing by formulating the problem as an end-to-end trainable task. Unlike previous methods, AOD-Net does not estimate intermediate parameters like the transmission matrix or atmospheric light separately. Instead, it directly predicts the clean image from the hazy image using a lightweight CNN. This approach simplifies the dehazing process and makes it easier to integrate AOD-Net into larger pipelines,such as YOLO.  
 There are several implementation of AOD-Net algorithm, I choose to use pytorch version of [AOD-Net](https://github.com/kivenyangming/AOD-Net_pytorch).  
 In my program, I create a AODNet block, which can be embedded into backbone of YOLO.
 ``` python
@@ -164,11 +164,11 @@ The Perspective Transformation method is not accurate enough to calculate the re
 There are 2 main cases in the speed estimation part. I provide screenshot in an operated video to show both of cases.  
 1. **Speed over threshold**  
 When speed is over threshold, the system will alert. In practical applications, the system will alert through a loudspeaker or buzzer, which can inform the blinds about the danger. Here, a red alert marker is used to indicate the warning, which is more intuitive in system demonstration.
-![Speed over threshold](/Speed_over_threshold.png "Speed over threshold")  
+![Speed over threshold](/figures/Speed_over_threshold.png "Speed over threshold")  
 
 2. **Speed below threshold**  
 When speed is below threshold, all the vehicles are very slow, which means it will be safe to go across the roads. No alert will occur.  
-![Speed below threshold](/Speed_below_threshold.png "Speed below threshold")  
+![Speed below threshold](/figures/Speed_below_threshold.png "Speed below threshold")  
 
 ### Object detection in haze
 I use AOD-Net and CBAM to modify the structure of YOLO. Several combinations of AOD-Net and CBAM have been tried, the following one turned out to have the best effect.  
@@ -178,29 +178,31 @@ backbone:
   # [from, repeats, module, args]
   - [-1, 1, AODNet, [3]] # Add Dehaze Block
 ```
-The best version of model use 2 CBAM blocks, added in P3 and P4 separately. Here I choose to set `kernel_size` to 3, because in the project, we focus more on small targets (such as vehicles and pedestrians). It is faster and more suitable for small targets. 
+The best version of model use 2 CBAM blocks, added in P4 and P5 separately. Here I choose to set `kernel_size` to 3, because in the project, we focus more on small targets (such as vehicles and pedestrians). It is faster and more suitable for small targets. 
 ``` yaml
 head:
-  - [-1, 1, nn.Upsample, [None, 2, "nearest"]]
-  - [[-1, 6], 1, Concat, [1]] # cat backbone P4
-  - [ -1, 1, CBAM, [3]] # add CBAM in P4
-  - [-1, 3, C2f, [512]] # 13
+...
+  - [-1, 1, Conv, [256, 3, 2]]
+  - [[-1, 13], 1, Concat, [1]] # cat head P4
+  - [ -1, 1, CBAM, [ 3 ] ]  # add CBAM in P4
+  - [-1, 3, C2f, [512]] # 19 (P4/16-medium)
 
-  - [-1, 1, nn.Upsample, [None, 2, "nearest"]]
-  - [[-1, 4], 1, Concat, [1]] # cat backbone P3
-  - [ -1, 1, CBAM, [3]]  # add CBAM in P3
-  - [-1, 3, C2f, [256]] # 16 (P3/8-small)
+  - [-1, 1, SCDown, [512, 3, 2]]
+  - [[-1, 10], 1, Concat, [1]] # cat head P5
+  - [ -1, 1, CBAM, [ 3 ] ]  # add CBAM in P5
+  - [-1, 3, C2fCIB, [1024, True, True]] # 22 (P5/32-large)
+...
 ```
-The final version for dehaze use `yolov10n-dehaze-add-head1.yaml` as configuration, and the output is stored in `results/log_train21_add2CBAM.out`.  
+The final version for dehaze use `yolov10n-dehaze-CBAM1.yaml` as configuration, and the output is stored in `results/log_train25_add2CBAM_P4P5.out`.  
 ``` out
 Ultralytics YOLOv8.1.34 🚀 Python-3.9.20 torch-2.0.1+cu117 CUDA:0 (Tesla P100-SXM2-16GB, 16276MiB)
-YOLOv10n-dehaze-add-head1 summary (fused): 309 layers, 2871395 parameters, 0 gradients, 14.0 GFLOPs
-                   all        100        773      0.603      0.398      0.449      0.252
-            pedestrian        100        173      0.605      0.301      0.376      0.159
-                   car        100        479      0.708      0.674      0.722      0.432
-                   bus        100         49      0.625      0.531      0.561      0.332
-               bicycle        100         12      0.471      0.167      0.211      0.136
-             motorbike        100         60      0.606      0.317      0.375      0.199
+YOLOv10n-dehaze-CBAM1 summary (fused): 309 layers, 3902947 parameters, 0 gradients, 15.4 GFLOPs
+                   all        100        773       0.56      0.427      0.469      0.259
+            pedestrian        100        173      0.588      0.353      0.394      0.175
+                   car        100        479      0.642      0.691      0.716      0.431
+                   bus        100         49      0.557       0.49      0.548      0.333
+               bicycle        100         12      0.483      0.236      0.299      0.151
+             motorbike        100         60      0.531      0.367       0.39      0.203
 Speed: 1.4ms preprocess, 6.7ms inference, 0.0ms loss, 0.0ms postprocess per image
 ```
 The base model use default YOLO configuration, which is `yolov10n-test.yaml`, stored in `results/log_train19_base.out`.
@@ -217,28 +219,31 @@ Speed: 1.5ms preprocess, 2.5ms inference, 0.0ms loss, 0.0ms postprocess per imag
 ```
 
 #### **Overall Performance Comparison**
-| Metric              | modified model | base model | Change      |
-|---------------------|----------------|------------|-------------|
-| **mAP@0.5 (all)**   | **0.603**      | 0.526      | **↑ 0.077** |
-| **Precision (all)** | 0.398          | **0.417**  | **↓ 0.019** |
-| **Recall (all)**    | 0.449          | **0.452**  | **↓ 0.003** |
-| **F1-score (all)**  | **0.252**      | 0.249      | **↑ 0.003** |
+| Metric           | Modified Model | Base Model | Change      | Change %   |
+|------------------|----------------|------------|-------------|------------|
+| **Precision**    | **0.560**      | 0.526      | **↑ 0.034** | **+6.46%** |
+| **Recall**       | **0.427**      | 0.417      | **↑ 0.010** | **+2.40%** |
+| **mAP@0.5**      | **0.469**      | 0.452      | **↑ 0.017** | **+3.76%** |
+| **mAP@0.5:0.95** | **0.259**      | 0.249      | **↑ 0.010** | **+4.02%** |
 
-**mAP@0.5 increased significantly by 7.7%, indicating improved overall detection accuracy.**  
-Precision, Recall, and F1-score remained similar, the tiny difference is probably caused by the quality of dataset.
+
+**Precision** increased by 6.46%, indicating that the model has improved in controlling false positives. This suggests that the modified model is better at reducing incorrect detections while maintaining accurate predictions.  
+**Recall** increased by 2.40%, meaning that the model can identify more true positives without significantly increasing false detections. This demonstrates a balanced improvement in detecting more objects while maintaining precision.  
+**mAP@0.5** increased by 3.76%, which is the core metrics for YOLO, showing an overall enhancement in object detection accuracy. The model has improved in correctly identifying and localizing objects at a standard IoU threshold.  
+**mAP@0.5:0.95** increased by 4.02%, indicating better performance under stricter IoU conditions. This suggests an improvement in the model’s generalization ability, making it more reliable across various object sizes and positions.
 
 ---
 
 #### **Category-wise Comparison**
-| Category       | mAP@0.5 (New) | mAP@0.5 (Old) | Change      | Recall Change |
-|----------------|---------------|---------------|-------------|---------------|
-| **Pedestrian** | 0.605         | 0.559         | **↑ 0.046** | **↓ 0.116**   |
-| **Car**        | **0.708**     | 0.617         | **↑ 0.091** | **↓ 0.015**   |
-| **Bus**        | **0.625**     | 0.597         | **↑ 0.028** | **0**         |
-| **Bicycle**    | **0.471**     | 0.408         | **↑ 0.063** | **↑ 0.084**   |
-| **Motorbike**  | **0.606**     | 0.448         | **↑ 0.158** | **↓ 0.05**    |
+| Category       | Precision (P)             | Recall (R)                    | mAP@0.5                   | mAP@0.5:0.95              |
+|----------------|---------------------------|-------------------------------|---------------------------|---------------------------|
+| **Pedestrian** | 0.559 → **0.588** (+5.2%) | 0.417 → **0.353** (-6.4%)     | 0.393 → **0.394** (+0.3%) | 0.163 → **0.175** (+1.2%) |
+| **Car**        | 0.617 → **0.642** (+4.1%) | 0.689 → **0.691** (+0.3%)     | 0.700 → **0.716** (+2.3%) | 0.422 → **0.431** (+0.9%) |
+| **Bus**        | 0.597 → **0.557** (-4.0%) | 0.531 → **0.490** (-4.1%)     | 0.584 → **0.548** (-3.6%) | 0.362 → **0.333** (-2.9%) |
+| **Bicycle**    | 0.408 → **0.483** (+7.5%) | 0.083 → **0.236** (+15.3%)    | 0.222 → **0.299** (+7.7%) | 0.110 → **0.151** (+4.1%) |
+| **Motorbike**  | 0.448 → **0.531** (+8.3%) | 0.367 → **0.367** (No Change) | 0.360 → **0.390** (+3.0%) | 0.189 → **0.203** (+1.4%) |
 
-**Significant mAP improvement for cars, buses, bicycles and motorbikes, especially a 9.1% boost for cars.**  
-The performance of pedestrian detection dropped. Fortunately, the system is used for vehicle detection, so the accuracy of pedestrian detection can be ignored.  
-
+For **Car**, Precision, Recall, and mAP@0.5 all show slight improvements, indicating that the model's performance in detecting cars has become more stable. In the system, car detection is core part for going across the roads, and this improvement significantly enhance the system.  
+However, All metrics of Bus have declined, which could be due to the dehaze + CBAM structure having a stronger effect on large.  
+Overall, the dehaze + CBAM mechanism has led to a performance improvement.
 ---
