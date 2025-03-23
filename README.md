@@ -5,6 +5,11 @@ Nowadays, the roads are busier than ever before, for the increasing of all kinds
 For blind people, it is very hard to confirm the safety when going cross the road. There will be plenty of cars on the road, the information about these cars should be informed to them in an efficient and reliable way.
 ![the blind on road](/figures/the_blind_on_road.png "the blind on road")
 
+## Scenario demonstration
+The scenario for the system is shown below. A blind person is standing by the road, with a controller of the system. The controller is connected with 2 cameras on both left and right, being able to detect vehicles on both sides, which will promise the safety for blind person.  
+
+![scenario](/figures/scenario.jpg "scenario")
+
 ## Custom YOLO Version
 This repository is a fork of [YOLOv10](https://github.com/THU-MIG/yolov10) and has been modified to suit specific needs. The project remains under the **AGPL-3.0 License**, ensuring that any modifications remain open-source.
 
@@ -45,8 +50,10 @@ Obviously, in our scenario, Method 1 is not suitable, because we are not able to
 For Perspective Transformation, a [blog](https://blog.roboflow.com/estimate-speed-computer-vision/) provides an excellent method, and can adapt to our own scenarios. I refer to the methods in the blog, which get satisfying performance.  
 
 #### Perspective Transformation
+We need a way to transform the coordinates in the image, which is represented by pixels, into actual coordinates on the road, removing the perspective-related distortion along the way. Fortunately, we can do this with OpenCV and some mathematics.To demonstrate it, we give a sketch map of the transformer.  
+![Perspective_Transformation](/figures/Perspective_Transformation.jpg "Perspective_Transformation")  
+In our real scenario, a model based on real world should be built. A sample model is shown below.  
 ![picture of Perspective Transformation](/figures/Perspective_Transformation_sample.jpg "Perspective Transformation Sample")
-We need a way to transform the coordinates in the image, which is represented by pixels, into actual coordinates on the road, removing the perspective-related distortion along the way. Fortunately, we can do this with OpenCV and some mathematics.  
 To transform the perspective, we need a Transformation Matrix, which we determine using the `getPerspectiveTransform` function in OpenCV. This function takes two arguments - source and target regions of interest. In the visualization below, these regions are labeled `A-B-C-D` and `A'-B'-C'-D'`, respectively.  
 In this example, I reorganize the coordinates of vertices `A-B-C-D` and `A'-B'-C'-D'` into 2D `SOURCE` and `TARGET` matrices, respectively, where each row of the matrix contains the coordinates of one point.  
 ``` python
@@ -133,6 +140,7 @@ And it is added at the top of backbone, process the input directly.
 ``` yaml
   - [-1, 1, AODNet, [3]] # Add Dehaze Block
 ```
+![AODNet.jpg](/figures/AODNet.jpg "AODNet.jpg")
 
 #### CBAM (Convolutional Block Attention Module)
 CBAM (Convolutional Block Attention Module) is a lightweight and effective attention mechanism designed to improve the feature extraction capability of convolutional neural networks (CNNs).  
@@ -226,6 +234,7 @@ Speed: 1.5ms preprocess, 2.5ms inference, 0.0ms loss, 0.0ms postprocess per imag
 | **mAP@0.5**      | **0.469**      | 0.452      | **↑ 0.017** | **+3.76%** |
 | **mAP@0.5:0.95** | **0.259**      | 0.249      | **↑ 0.010** | **+4.02%** |
 
+![Overall Performance Comparison](/figures/evaluation_metrics_comparison.png "Overall Performance Comparison")
 
 **Precision** increased by 6.46%, indicating that the model has improved in controlling false positives. This suggests that the modified model is better at reducing incorrect detections while maintaining accurate predictions.  
 **Recall** increased by 2.40%, meaning that the model can identify more true positives without significantly increasing false detections. This demonstrates a balanced improvement in detecting more objects while maintaining precision.  
@@ -237,13 +246,16 @@ Speed: 1.5ms preprocess, 2.5ms inference, 0.0ms loss, 0.0ms postprocess per imag
 #### **Category-wise Comparison**
 | Category       | Precision (P)             | Recall (R)                    | mAP@0.5                   | mAP@0.5:0.95              |
 |----------------|---------------------------|-------------------------------|---------------------------|---------------------------|
-| **Pedestrian** | 0.559 → **0.588** (+5.2%) | 0.417 → **0.353** (-6.4%)     | 0.393 → **0.394** (+0.3%) | 0.163 → **0.175** (+1.2%) |
+| **Pedestrian** | 0.559 → **0.588** (+5.2%) | 0.417 → **0.353** (-6.4%)    | 0.393 → **0.394** (+0.3%) | 0.163 → **0.175** (+1.2%) |
 | **Car**        | 0.617 → **0.642** (+4.1%) | 0.689 → **0.691** (+0.3%)     | 0.700 → **0.716** (+2.3%) | 0.422 → **0.431** (+0.9%) |
 | **Bus**        | 0.597 → **0.557** (-4.0%) | 0.531 → **0.490** (-4.1%)     | 0.584 → **0.548** (-3.6%) | 0.362 → **0.333** (-2.9%) |
 | **Bicycle**    | 0.408 → **0.483** (+7.5%) | 0.083 → **0.236** (+15.3%)    | 0.222 → **0.299** (+7.7%) | 0.110 → **0.151** (+4.1%) |
 | **Motorbike**  | 0.448 → **0.531** (+8.3%) | 0.367 → **0.367** (No Change) | 0.360 → **0.390** (+3.0%) | 0.189 → **0.203** (+1.4%) |
 
+![Category-wise Comparison](/figures/evaluation_category_comparison.png "Category-wise Comparison")
+
 For **Car**, Precision, Recall, and mAP@0.5 all show slight improvements, indicating that the model's performance in detecting cars has become more stable. In the system, car detection is core part for going across the roads, and this improvement significantly enhance the system.  
 However, All metrics of Bus have declined, which could be due to the dehaze + CBAM structure having a stronger effect on large.  
-Overall, the dehaze + CBAM mechanism has led to a performance improvement.
+Overall, the dehaze + CBAM mechanism has led to a performance improvement.  
+
 ---
