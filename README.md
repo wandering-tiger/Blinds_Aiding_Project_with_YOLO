@@ -6,7 +6,7 @@ For blind people, it is very hard to confirm the safety when going cross the roa
 ![the blind on road](/figures/the_blind_on_road.png "the blind on road")
 
 ## Scenario demonstration
-The scenario for the system is shown below. A blind person is standing by the road, with a controller of the system. The controller is connected with 2 cameras on both left and right, being able to detect vehicles on both sides, which will promise the safety for blind person.  
+The scenario for the system is shown below. A blind person is standing by the road, with a controller of the system. The controller is connected with 2 cameras on both left and right side, being able to detect vehicles on both sides, which will promise the safety for blind person.  
 
 ![scenario](/figures/scenario.jpg "scenario")
 
@@ -244,9 +244,9 @@ Speed: 1.5ms preprocess, 2.5ms inference, 0.0ms loss, 0.0ms postprocess per imag
 ---
 
 #### **Category-wise Comparison**
-| Category       | Precision (P)             | Recall (R)                    | mAP@0.5                   | mAP@0.5:0.95              |
+| Category       | Precision                 | Recall                        | mAP@0.5                   | mAP@0.5:0.95              |
 |----------------|---------------------------|-------------------------------|---------------------------|---------------------------|
-| **Pedestrian** | 0.559 → **0.588** (+5.2%) | 0.417 → **0.353** (-6.4%)    | 0.393 → **0.394** (+0.3%) | 0.163 → **0.175** (+1.2%) |
+| **Pedestrian** | 0.559 → **0.588** (+5.2%) | 0.417 → **0.353** (-6.4%)     | 0.393 → **0.394** (+0.3%) | 0.163 → **0.175** (+1.2%) |
 | **Car**        | 0.617 → **0.642** (+4.1%) | 0.689 → **0.691** (+0.3%)     | 0.700 → **0.716** (+2.3%) | 0.422 → **0.431** (+0.9%) |
 | **Bus**        | 0.597 → **0.557** (-4.0%) | 0.531 → **0.490** (-4.1%)     | 0.584 → **0.548** (-3.6%) | 0.362 → **0.333** (-2.9%) |
 | **Bicycle**    | 0.408 → **0.483** (+7.5%) | 0.083 → **0.236** (+15.3%)    | 0.222 → **0.299** (+7.7%) | 0.110 → **0.151** (+4.1%) |
