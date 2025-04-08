@@ -17,8 +17,8 @@ width = 0.35  # 柱子的宽度
 
 # 画图
 fig, ax = plt.subplots(figsize=(8, 5))
-bars1 = ax.bar(x - width/2, base_model, width, label="Base Model", color='gray', alpha=0.7)
-bars2 = ax.bar(x + width/2, modified_model, width, label="Modified Model", color='blue', alpha=0.7)
+bars1 = ax.bar(x - width/2, base_model, width, label="YOLOv10 Model", color='gray', alpha=0.7)
+bars2 = ax.bar(x + width/2, modified_model, width, label="YOLOv10+AODNet+CBAM Model", color='blue', alpha=0.7)
 
 # 显示提升数值
 for bars in [bars1, bars2]:

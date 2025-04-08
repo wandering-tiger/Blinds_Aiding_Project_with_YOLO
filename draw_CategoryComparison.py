@@ -33,7 +33,7 @@ modified_data = [precision_modified, recall_modified, map50_modified, map5095_mo
 
 for i, ax in enumerate(axes.flat):
     for j, category in enumerate(categories):
-        ax.bar(x[j] - width/2, base_data[i][j], width, color=base_color, alpha=0.7, label="Base Model" if j == 0 else None)
+        ax.bar(x[j] - width/2, base_data[i][j], width, color=base_color, alpha=0.7, label="YOLOv10 Model" if j == 0 else None)
         ax.bar(x[j] + width/2, modified_data[i][j], width, color=modified_colors[j], alpha=0.9, label=category if i == 0 else None)
 
     ax.set_title(metrics[i], fontsize=12, fontweight="bold")
@@ -43,10 +43,10 @@ for i, ax in enumerate(axes.flat):
     ax.grid(axis="y", linestyle="--", alpha=0.6)
 
 # **在外部手动创建图例**
-handles = [plt.Rectangle((0,0),1,1, color=base_color, alpha=0.7, label="Base Model")] + \
+handles = [plt.Rectangle((0,0),1,1, color=base_color, alpha=0.7, label="YOLOv10 Model")] + \
           [plt.Rectangle((0,0),1,1, color=modified_colors[i], alpha=0.9, label=categories[i]) for i in range(len(categories))]
 
-fig.legend(handles, ["Base Model"] + categories, loc="lower center", ncol=6, fontsize=10)
+fig.legend(handles, ["YOLOv10 Model"] + categories, loc="lower center", ncol=6, fontsize=10)
 
 # 调整布局
 plt.suptitle("Performance Comparison Across Categories", fontsize=14, fontweight="bold", color="black")
